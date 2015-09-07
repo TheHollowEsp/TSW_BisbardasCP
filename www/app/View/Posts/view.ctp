@@ -1,30 +1,40 @@
 <!-- File: /app/View/Posts/view.ctp -->
-
-<h1><?php echo h($post['Post']['title']); ?></h1>
-
-<p><small>Created: <?php echo $post['Post']['created']; ?></small></p>
-
-<p><?php echo h($post['Post']['body']); ?></p>
-
-    <?php
-        if ($post['Post']['author'] === $userLogged['id']){ //Si eres el propietario, borrar
-            echo $this->Form->postLink('Borrar',array('controller' => 'posts','action' => 'delete',$post['Post']['id']));   
-        }
-        $likes = $post['Post']['likes']; // Numero de likes
-        if ( $likes > '0'){
-            if ( $likes === '1'){
-                echo 'A un jubileta le gusta esto';    
-            }else{
-                echo 'A ' . $likes . ' jubiletas les gustas esto';    
-            }
-        }
-    
-    echo $this->Form->postLink('Like',array('controller' => 'likes','action' => 'like',$post['Post']['id']));//Dale a Like       
-    
-    echo $this->Form->create('Post',array('url' => array('controller' => 'posts', 'action' => 'add'))); //Cambiamos de accion
-    echo $this->Form->input('title');
-    echo $this->Form->hidden('parent_id', array('value' => $post['Post']['id']));
-    echo $this->Form->input('body', array('rows' => '2'));
-    echo $this->Form->end('Comentar');
-    
-    ?>
+<?php $imageAv = 'posts/' . $post['Post']['imgPath'];?>
+   <div class="bb-post">        
+        <div class="post-image">
+         <?php echo $this->Html->image('posts/' . $post['Post']['imgPath'], array('alt' => $post['Post']['title']));?> 
+        </div>
+        <div class="post-body">
+          <div class="title">
+           <?php echo $post['Post']['title']; ?>
+          </div>
+          <div class="content">
+            <div class="ctext">
+              <p><?php echo $post['Post']['body']; ?></p>
+            </div>
+            
+          </div>
+          <div class="social">
+            <span class="like-button">
+            
+             <?php echo $this->Form->postLink('Me gusta',array('controller' => 'likes','action' => 'like',$post['Post']['id']))?></button>
+            <?php  
+             if ($post['Post']['author'] === $userLogged['id']){ //Si eres el propietario, borrar
+             ?> 
+                <button onclick="window.location.href='<?php echo Router::url(array('controller'=>'posts', 'action'=>'delete',$post['Post']['id']))?>'"><?php echo __('Borrar post') ?></button>   
+             <?php } ?></span>
+            <span class="social-resume"><?php        
+                $likes = $post['Post']['likes']; // Numero de likes
+                if ( $likes > '0'){
+                    if ( $likes === '1'){
+                        echo 'A un jubileta le gusta esto';    
+                    }else{
+                        echo 'A ' . $likes . ' jubiletas les gusta esto';    
+                    }
+                } 
+             ?> </span>
+          </div>
+          <div class="clear-float"></div>
+        </div>
+        <div class="clear-float"></div>
+</div>

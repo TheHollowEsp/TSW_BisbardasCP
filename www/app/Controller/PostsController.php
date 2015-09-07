@@ -4,19 +4,19 @@ class PostsController extends AppController {
     public $helpers = array('Html', 'Form');
 	
 	public function index() {
-
+        
         $this->set('posts', $this->Post->find('all'));
 		
     }
 	// Funciona correctamente
 	public function view($id = null) {
         if (!$id) {
-            throw new NotFoundException(__('Invalid post'));
+            throw new NotFoundException(__('Post invalido'));
         }
 
         $post = $this->Post->findById($id);
         if (!$post) {
-            throw new NotFoundException(__('Invalid post'));
+            throw new NotFoundException(__('Post invalido'));
         }
         $this->set('post', $post);
         $this->set('userLogged',$this->Auth->user());
@@ -28,11 +28,18 @@ class PostsController extends AppController {
         if ($this->request->is('post')) {
             $this->Post->create();
              $this->request->data['Post']['author'] = $this->Auth->user('id');
+             if(!empty($this->request->data['Post']['upload'])){
+                        //$this->log('Veo la imagen de post', 'debug');
+                        $this->log($this->request->data['Post']['upload'], 'debug');
+                        $file = $this->request->data['Post']['upload'];                        
+                        move_uploaded_file($file['tmp_name'], WWW_ROOT . 'img\posts/' . $file['name']);
+                        $this->request->data['Post']['imgPath'] = $file['name'];                     
+                    }
             if ($this->Post->save($this->request->data)) {
-                $this->Session->setFlash(__('Your post has been saved.'));
+                $this->Session->setFlash(__('Post guardado.'));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Session->setFlash(__('Unable to add your post.'));
+            $this->Session->setFlash(__('No se ha podido guardar el post.'));
         }
     }
     public function delete($id = null) {

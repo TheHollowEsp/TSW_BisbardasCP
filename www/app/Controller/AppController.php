@@ -40,9 +40,10 @@ class AppController extends Controller {
             ),
             'logoutRedirect' => array(
                 'controller' => 'users',
-                'action' => 'login',
-                'home'
+                'action' => 'login'
+                
             ),
+            
             'authenticate' => array(
                 'Form' => array(
                     'passwordHasher' => array(
@@ -57,8 +58,6 @@ class AppController extends Controller {
     
     
     public function isAuthorized($user) {
-    
-
     //return false;
     return true; // Para debug, en release definir permisos en UsersController
 }

@@ -4,7 +4,13 @@ App::uses('AppModel', 'Model');
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 class User extends AppModel {
     
-     public $hasMany = 'Friendship';
+     //No activar hasta que quieras que pete
+     public $hasMany = array(
+        'User' => array(
+            'className' => 'Friendship',
+            'foreignKey' => 'user'
+        )
+    );
 
     public $validate = array(
         'username' => array(
@@ -24,6 +30,20 @@ class User extends AppModel {
             'required' => array(
                 'rule' => array('notEmpty'),
                 'message' => 'La contraseña es obligatoria'
+            ),
+            'length' => array(
+                'rule'  => array('between', 4, 40),
+                'message'   =>  'Entre 4 y 40 caracteres.',
+            ),
+        ),
+        'password2' => array(
+            'length' => array(
+            'rule'      => array('between', 4, 40),
+            'message'   => 'Entre 4 y 40 caracteres.',
+            ),
+            'compare'    => array(
+            'rule'      => array('validate_passwords'),
+            'message' => 'The passwords you entered do not match.',
             )
         ),
         'img' => array(
@@ -35,7 +55,8 @@ class User extends AppModel {
         
     );
 
-
+   
+    // Pone la fecha en la request y encripta la password
     public function beforeSave($options = array()) {
         $this->data[$this->alias]['registered'] = date("Y-m-d H:i:s");
         if (!empty($this->data[$this->alias]['password'])) {
@@ -46,9 +67,13 @@ class User extends AppModel {
         }
         return true;
     }
+    
+    public function validate_passwords() {
+        return $this->data[$this->alias]['password'] === $this->data[$this->alias]['password2'];
+    }
 }
 
-
+    
 
 
 ?>

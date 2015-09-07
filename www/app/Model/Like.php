@@ -11,8 +11,9 @@ public function beforeSave($options = array()) {
             $valido = $this->find('count',array(
             'conditions' => array('Like.author' => $idLiker,'Like.post_id' => $idPost)
         ));
-            
-        if ($valido === 0){
+   
+        if ($valido == 0){
+            $this->log('Like valido', 'debug'); 
             $this->Post->addLike($idPost);
             return true;
         }else{

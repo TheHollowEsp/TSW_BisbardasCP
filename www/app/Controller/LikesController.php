@@ -5,7 +5,7 @@ class LikesController extends AppController {
     // Funciona correctamente
 	public function like($id = null) {
         if (!$id) {
-            throw new NotFoundException(__('Invalid like'));
+            throw new NotFoundException(__('Like invalido'));
         }
         if ($this->request->is('post')) {
             
@@ -17,7 +17,7 @@ class LikesController extends AppController {
                 $this->Session->setFlash(__('Your like has been saved.'));
                 return $this->redirect(array('controller' => 'posts','action' => 'view',$id));
             }else{
-                $this->Session->setFlash(__('Pero si ya te gusta este post.'));
+                $this->Session->setFlash(__('Pero si ya te gusta este post.'), 'flash_notification');
             }
         }else{
         $this->Session->setFlash(__('Debe accederse mediante POST.'));

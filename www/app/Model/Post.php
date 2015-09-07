@@ -16,11 +16,14 @@ class Post extends AppModel {
     return $this->field('id', array('id' => $post, 'author' => $user)) !== false;
 }
     
-public function addLike($id){       
+public function addLike($id){
+        $this->log('Anhadiendo like a post', 'debug');       
         $this->updateAll(
             array('Post.likes' => 'Post.likes+1'),                    
             array('Post.id' => $id)
-        );        
+        );
+         $this->log('Like en post'.$id, 'debug');
+                
     }
 }
 ?>
